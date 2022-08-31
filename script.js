@@ -1,22 +1,37 @@
 async function loadJson(url) {
   const response = await fetch(url, { mode: 'cors' });
+  console.log(url);
   if (response.status === 200) {
     return response.json();
   }
   throw new Error(`${response.status} for ${response.url}`);
 }
 
-async function getWeather(city, country, state = '') {
+async function getLocation(city, country, state = '') {
+  const encodedCity = encodeURIComponent(city.trim());
+  const encodedCountry = encodeURIComponent(country.trim());
+  const searchQuery =
+    state === ''
+      ? `${encodedCity},${encodedCountry}`
+      : `${encodedCity},${state},${encodedCountry}`;
+  const response = await loadJson(
+    `http://api.openweathermap.org/geo/1.0/direct?q=${searchQuery}&limit=1&appid=58f2669ab93d58441800526b124f17d2`
+  );
+  const locationData = response[0];
+  return {
+    lat: locationData.lat,
+    lon: locationData.lon,
+    country: locationData.country,
+  };
+}
+
+async function getWeather(location) {
   let weatherObj = {};
   try {
-    const encodedCity = encodeURIComponent(city.trim());
-    const encodedCountry = encodeURIComponent(country.trim());
-    const searchQuery =
-      state === ''
-        ? `${encodedCity},${encodedCountry}`
-        : `${encodedCity},${state},${encodedCountry}`;
+    const lat = location.lat.toString();
+    const lon = location.lon.toString();
     const weatherData = await loadJson(
-      `http://api.openweathermap.org/data/2.5/weather?q=${searchQuery}&APPID=58f2669ab93d58441800526b124f17d2`
+      `http://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&APPID=58f2669ab93d58441800526b124f17d2`
     );
     weatherObj = {
       city: weatherData.name,
@@ -36,7 +51,7 @@ async function getCountries() {
     const countriesData = await loadJson('https://restcountries.com/v3.1/all');
     countriesData.forEach((country) => {
       const name = country.name.common;
-      const code = country.ccn3;
+      const code = country.cca2;
       countriesObj[name] = code;
     });
   } catch (error) {
@@ -66,13 +81,12 @@ function renderStateSelection() {
   countrySelect.addEventListener('change', (option) => {
     const countrySelection = option.target.value;
     const stateSelect = document.getElementById('state-select');
-    if (countrySelection === '840') {
+    if (countrySelection === 'US') {
       formState.classList.remove('hidden');
-      stateSelect.selectedIndex = 0;
     } else {
       formState.classList.add('hidden');
-      stateSelect.selectedIndex = 0;
     }
+    stateSelect.selectedIndex = 0;
   });
 }
 
@@ -152,7 +166,8 @@ async function processForm(event) {
   const city = document.forms['location-form'].city.value;
   const country = document.forms['location-form'].country.value;
   const state = document.forms['location-form'].state.value;
-  const weatherData = await getWeather(city, country, state);
+  const locationData = await getLocation(city, country, state);
+  const weatherData = await getWeather(locationData);
   console.log(weatherData);
 }
 
