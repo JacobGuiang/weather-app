@@ -8,7 +8,7 @@
   <title>Weather App</title>
 </head>
 <body>
-  <form id="location-form">
+  <form action="#" method="post" id="location-form" name="location-form">
     <div class="form-city" id="form-city">
       <label for="city-input">City</label>
       <input type="text" id="city-input" name="city">
@@ -21,9 +21,12 @@
     </div>
     <div class="form-state hidden" id="form-state">
       <label for="state-input">State</label>
-      <select type="text" id="state-select" name="country">
+      <select type="text" id="state-select" name="state">
         <option value="" disabled selected></option>
       </select>
+    </div>
+    <div class="form-submit">
+      <input type="submit" value="Submit">
     </div>
   </form>
   <script src="script.js"></script>

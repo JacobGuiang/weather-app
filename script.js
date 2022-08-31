@@ -6,11 +6,17 @@ async function loadJson(url) {
   throw new Error(`${response.status} for ${response.url}`);
 }
 
-async function getWeather(location) {
+async function getWeather(city, country, state = '') {
   let weatherObj = {};
   try {
+    const encodedCity = encodeURIComponent(city.trim());
+    const encodedCountry = encodeURIComponent(country.trim());
+    const searchQuery =
+      state === ''
+        ? `${encodedCity},${encodedCountry}`
+        : `${encodedCity},${state},${encodedCountry}`;
     const weatherData = await loadJson(
-      `http://api.openweathermap.org/data/2.5/weather?q=${location}&APPID=58f2669ab93d58441800526b124f17d2`
+      `http://api.openweathermap.org/data/2.5/weather?q=${searchQuery}&APPID=58f2669ab93d58441800526b124f17d2`
     );
     weatherObj = {
       city: weatherData.name,
@@ -59,10 +65,13 @@ function renderStateSelection() {
   const formState = document.getElementById('form-state');
   countrySelect.addEventListener('change', (option) => {
     const countrySelection = option.target.value;
+    const stateSelect = document.getElementById('state-select');
     if (countrySelection === '840') {
       formState.classList.remove('hidden');
+      stateSelect.selectedIndex = 0;
     } else {
       formState.classList.add('hidden');
+      stateSelect.selectedIndex = 0;
     }
   });
 }
@@ -138,8 +147,17 @@ function loadStates() {
   });
 }
 
-(async () => {
-  loadCountries();
-  renderStateSelection();
-  loadStates();
-})();
+async function processForm(event) {
+  event.preventDefault();
+  const city = document.forms['location-form'].city.value;
+  const country = document.forms['location-form'].country.value;
+  const state = document.forms['location-form'].state.value;
+  const weatherData = await getWeather(city, country, state);
+  console.log(weatherData);
+}
+
+loadCountries();
+renderStateSelection();
+loadStates();
+const form = document.getElementById('location-form');
+form.addEventListener('submit', processForm);
