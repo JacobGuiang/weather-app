@@ -23,11 +23,13 @@ async function getLocation(city, country, state = '') {
       ? `${encodedCity},${encodedCountry}`
       : `${encodedCity},${state},${encodedCountry}`;
   const response = await loadJson(
-    `http://api.openweathermap.org/geo/1.0/direct?q=${searchQuery}&limit=1&appid=58f2669ab93d58441800526b124f17d2`
+    `http://api.openweathermap.org/geo/1.0/direct?q=${searchQuery}&limit=5&appid=58f2669ab93d58441800526b124f17d2`
   );
   console.log(response);
   const locationData = response[0];
-  const stateStr = locationData.state === undefined ? '' : locationData.state;
+  const stateStr = Object.hasOwn(locationData, 'state')
+    ? locationData.state
+    : '';
   return {
     lat: locationData.lat,
     lon: locationData.lon,

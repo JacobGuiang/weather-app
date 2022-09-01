@@ -28,7 +28,7 @@
           </select>
         </div>
         <div class="form-units" id="form-units">
-          <input type="radio" id="imperial-select" name="units" value="imperial">
+          <input type="radio" id="imperial-select" name="units" value="imperial" checked="checked">
           <label for="imperial-select">&deg;F</label>
           <input type="radio" id="metric-select" name="units" value="metric">
           <label for="celsius-select">&deg;C</label>
@@ -57,5 +57,10 @@
     </div>
   </div>
   <script src="script.js"></script>
+  <script>
+    if (window.history.replaceState) {
+        window.history.replaceState(null, null, window.location.href);
+      }
+  </script>
 </body>
 </html>
