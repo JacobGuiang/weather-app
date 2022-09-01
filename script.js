@@ -1,11 +1,3 @@
-function kelvinToFahrenheit(temperature) {
-  return ((temperature - 273.15) * 9) / 5 + 32;
-}
-
-function kelvinToCelsius(temperature) {
-  return temperature - 272.15;
-}
-
 async function loadJson(url) {
   const response = await fetch(url, { mode: 'cors' });
   console.log(url);
