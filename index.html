@@ -10,7 +10,7 @@
 <body>
   <div class="container">
     <div class="form-container">
-      <form action="#" method="post" id="location-form" name="location-form">
+      <form action="#" method="get" id="location-form" name="location-form">
         <div class="form-city" id="form-city">
           <label for="city-input">City</label>
           <input type="text" id="city-input" name="city">
@@ -57,10 +57,5 @@
     </div>
   </div>
   <script src="script.js"></script>
-  <script>
-    if (window.history.replaceState) {
-        window.history.replaceState(null, null, window.location.href);
-      }
-  </script>
 </body>
 </html>
