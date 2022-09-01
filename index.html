@@ -27,6 +27,12 @@
             <option value="" disabled selected></option>
           </select>
         </div>
+        <div class="form-units" id="form-units">
+          <input type="radio" id="imperial-select" name="units" value="imperial">
+          <label for="imperial-select">&deg;F</label>
+          <input type="radio" id="metric-select" name="units" value="metric">
+          <label for="celsius-select">&deg;C</label>
+        </div>
       
         <div class="form-submit">
           <input type="submit" value="Submit">
@@ -34,7 +40,21 @@
       </form>
     </div>
 
-    <div class="weather-info"></div>
+    <div class="weather-info hidden" id="weather-info">
+      <div class="weather-info-top">
+        <div id="weather-heading"></div>
+        <div id="temperature"></div>
+        <div id="weather-desc"></div>
+      </div>
+      <div class="weather-info-bot">
+        <div id="temperature-feels-like"></div>
+        <div id="temperature-high"></div>
+        <div id="temperature-low"></div>
+        <div id="wind"></div>
+        <div id="humidity"></div>
+        <div id="pressure"></div>
+      </div>
+    </div>
   </div>
   <script src="script.js"></script>
 </body>
