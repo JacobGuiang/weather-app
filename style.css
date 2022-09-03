@@ -1,3 +1,283 @@
+/* http://meyerweb.com/eric/tools/css/reset/ 
+   v2.0 | 20110126
+   License: none (public domain)
+*/
+
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed, 
+figure, figcaption, footer, header, hgroup, 
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure, 
+footer, header, hgroup, menu, nav, section {
+	display: block;
+}
+body {
+	line-height: 1;
+}
+ol, ul {
+	list-style: none;
+}
+blockquote, q {
+	quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content: '';
+	content: none;
+}
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  font-size: 1.5rem;
+  height: 100vh;
+  background-position: center center;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+select {
+  cursor: pointer;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  text-indent: 1px;
+  text-overflow: '';
+}
+
+input, select {
+  border: none;
+  font-size: inherit;
+  color: white;
+  border-radius: 15px;
+  padding: 4px;
+  text-align: center;
+}
+
+body, input, select {
+  background-color: #525252;
+}
+
+input:focus::placeholder {
+  color: transparent;
+}
+
+input:focus::-webkit-input-placeholder {
+  color: transparent;
+}
+
+input:focus:-moz-placeholder {
+  color: transparent;
+}
+
+input:focus::-moz-placeholder {
+  color: transparent;
+}
+
+input:focus:-ms-input-placeholder {
+  color: transparent;
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 30px #525252 inset !important;
+}
+
+input:-webkit-autofill {
+  -webkit-text-fill-color: white !important;
+}
+
+::placeholder {
+  text-align: inherit;
+  color: inherit;
+  font-size: inherit;
+  opacity: 1;
+}
+
+:-ms-input-placeholder {
+  text-align: inherit;
+  color: inherit;
+  font-size: inherit;
+}
+
+::-ms-input-placeholder {
+  text-align: inherit;
+  color: inherit;
+  font-size: inherit;
+}
+
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+.display-container {
+  display: flex;
+  flex-direction: column;
+  background: rgba(0, 0, 0, 0.9);
+  color: white;
+  width: 60%;
+  height: 60%;
+  border-radius: 20px;
+  padding: 0 40px 40px;
+}
+
+.form-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.form-input-container {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
+.form-city {
+  flex: 2;
+}
+
+.form-country {
+  flex: 2;
+}
+
+.form-state {
+  flex: 1;
+}
+
+.units-container {
+  display: flex;
+  gap: 10px;
+}
+
+.city-input,
+.state-select {
+  width: 100%;
+}
+
+.country-select {
+  width: auto;
+}
+
+.form-bottom {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+.imperial-container,
+.metric-container {
+  display: flex;
+}
+
+.unit-input { 
+  width: 20px;
+  height: 20px;
+  accent-color: #525252;
+  cursor: pointer;
+}
+
+label {
+  cursor: pointer;
+}
+
+.submit-btn {
+  padding: 4px 40px;
+  cursor: pointer;
+}
+
+.title {
+  text-align: center;
+  font-size: 3rem;
+  padding: 30px;
+}
+
+.weather-heading {
+  text-align: center;
+  font-size: 2.5rem;
+}
+
+.weather-main-container {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+}
+
+.weather-info {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.weather-info-top {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+}
+
+.weather-info-bottom {
+  display: flex;
+  flex: 1;
+  align-self: center;
+  width: 100%;
+  gap: 25%;
+}
+
+.weather-details {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.weather-details-item {
+  display: flex;
+  justify-content: space-between;
+  border-top: 1px solid #525252;
+  padding-top: 10px;
+}
+
+.weather-main {
+  font-size: 2rem;
+}
+
+.form-submit {
+  text-align: center;
+}
+
 .hidden {
   display:none;
+}
+
+#weather-desc {
+  text-transform: capitalize;
 }

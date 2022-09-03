@@ -9,50 +9,70 @@
 </head>
 <body>
   <div class="container">
-    <div class="form-container">
-      <form action="#" method="get" id="location-form" name="location-form">
-        <div class="form-city" id="form-city">
-          <label for="city-input">City</label>
-          <input type="text" id="city-input" name="city">
-        </div>
-        <div class="form-country" id="form-country">
-          <label for="country-select">Country</label>
-          <select type="text" id="country-select" name="country">
-            <option value="" disabled selected></option>
-          </select>
-        </div>
-        <div class="form-state hidden" id="form-state">
-          <label for="state-input">State</label>
-          <select type="text" id="state-select" name="state">
-            <option value="" disabled selected></option>
-          </select>
-        </div>
-        <div class="form-units" id="form-units">
-          <input type="radio" id="imperial-select" name="units" value="imperial" checked="checked">
-          <label for="imperial-select">&deg;F</label>
-          <input type="radio" id="metric-select" name="units" value="metric">
-          <label for="celsius-select">&deg;C</label>
-        </div>
-      
-        <div class="form-submit">
-          <input type="submit" value="Submit">
+    <div class="display-container">
+      <div class="title">
+        Weather
+      </div>
+
+      <form action="#" method="get" id="weather-form" name="weather-form">
+        <div class="form-container">
+          <div class="form-input-container">
+            <div class="location-input form-city" id="form-city">
+              <input type="text" class="city-input" id="city-input" name="city" placeholder="City" required>
+            </div>
+
+            <div class="location-input form-country" id="form-country">
+              <select type="text" class="country-select" id="country-select" name="country">
+                <option value="" disabled selected>Country</option>
+              </select>
+
+            </div>
+            <div class="location-input form-state hidden" id="form-state">
+              <select type="text" class="state-select" id="state-select" name="state">
+                <option value="" disabled selected>State</option>
+              </select>
+            </div>
+
+            <div class="units-container">
+              <div class="imperial-container">
+                <input type="radio" class="unit-input" id="imperial-select" name="units" value="imperial" checked="checked">
+                <label for="imperial-select">&deg;F</label>
+              </div>
+              
+              <div class="metric-container">
+                <input type="radio" class="unit-input" id="metric-select" name="units" value="metric">
+                <label for="metric-select">&deg;C</label>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-submit">
+            <input type="submit" value="Submit" class="submit-btn">
+          </div>
         </div>
       </form>
-    </div>
 
-    <div class="weather-info hidden" id="weather-info">
-      <div class="weather-info-top">
-        <div id="weather-heading"></div>
-        <div id="temperature"></div>
-        <div id="weather-desc"></div>
-      </div>
-      <div class="weather-info-bot">
-        <div id="temperature-feels-like"></div>
-        <div id="temperature-high"></div>
-        <div id="temperature-low"></div>
-        <div id="wind"></div>
-        <div id="humidity"></div>
-        <div id="pressure"></div>
+      <div class="weather-info hidden" id="weather-info">
+        <div class="weather-info-top">
+          <div class="weather-heading" id="weather-heading"></div>
+          <div class="weather-main-container">
+            <div class="weather-main" id="temperature"></div>
+            <div class="weather-main" id="weather-desc"></div>
+          </div>
+        </div>
+        <div class="weather-info-bottom">
+          <div class="weather-details">
+            <div class="weather-details-item" id="temp-feels-like"></div>
+            <div class="weather-details-item" id="temp-high"></div>
+            <div class="weather-details-item" id="temp-low"></div>
+          </div>
+
+          <div class="weather-details">
+            <div class="weather-details-item" id="wind"></div>
+            <div class="weather-details-item" id="humidity"></div>
+            <div class="weather-details-item" id="pressure"></div>
+          </div>
+        </div>
       </div>
     </div>
   </div>

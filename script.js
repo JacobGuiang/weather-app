@@ -178,19 +178,26 @@ function loadStates() {
   });
 }
 
+function createWeatherDetail(id, name, value) {
+  const detailDiv = document.getElementById(id);
+
+  const nameDiv = document.createElement('div');
+  nameDiv.innerText = name;
+
+  const valueDiv = document.createElement('div');
+  valueDiv.innerText = value;
+
+  detailDiv.appendChild(nameDiv);
+  detailDiv.appendChild(valueDiv);
+}
+
 function displayWeatherData(weatherData) {
   const weatherInfo = document.getElementById('weather-info');
+  weatherInfo.classList.remove('hidden');
+
   const heading = document.getElementById('weather-heading');
   const temp = document.getElementById('temperature');
   const desc = document.getElementById('weather-desc');
-  const feelsLike = document.getElementById('temperature-feels-like');
-  const tempHigh = document.getElementById('temperature-high');
-  const tempLow = document.getElementById('temperature-low');
-  const humidity = document.getElementById('humidity');
-  const pressure = document.getElementById('pressure');
-  const wind = document.getElementById('wind');
-
-  weatherInfo.classList.remove('hidden');
 
   const locationStr =
     weatherData.state.length === 0
@@ -200,31 +207,76 @@ function displayWeatherData(weatherData) {
 
   temp.innerText = `${weatherData.main.temp}\xB0`;
   desc.innerText = weatherData.weather.description;
-  feelsLike.innerText = `Feels like: ${weatherData.main.feels_like}\xB0`;
-  tempHigh.innerText = `High: ${weatherData.main.temp_max}\xB0`;
-  tempLow.innerText = `Low: ${weatherData.main.temp_min}\xB0`;
+
+  createWeatherDetail(
+    'temp-feels-like',
+    'Feels like',
+    `${weatherData.main.feels_like}\xB0`
+  );
+  createWeatherDetail('temp-high', 'High', `${weatherData.main.temp_max}\xB0`);
+  createWeatherDetail('temp-low', 'Low', `${weatherData.main.temp_min}\xB0`);
 
   let windSpeedStr;
   if (weatherData.units === 'imperial') {
-    windSpeedStr = `Wind: ${weatherData.wind.speed} mph`;
+    windSpeedStr = `${weatherData.wind.speed} mph`;
   } else {
-    windSpeedStr = `Wind: ${(Number(weatherData.wind.speed) * 3.6).toFixed(
-      2
-    )} km/h`;
+    windSpeedStr = `${(Number(weatherData.wind.speed) * 3.6).toFixed(2)} km/h`;
   }
-  wind.innerText = windSpeedStr;
+  createWeatherDetail('wind', 'Wind', windSpeedStr);
 
-  humidity.innerText = `Humidity: ${weatherData.main.humidity}%`;
-  pressure.innerText = `Pressure: ${weatherData.main.pressure} hPa`;
+  createWeatherDetail('humidity', 'Humidity', `${weatherData.main.humidity}%`);
+  createWeatherDetail(
+    'pressure',
+    'Pressure',
+    `${weatherData.main.pressure} hPa`
+  );
+
+  const weatherId = weatherData.weather.id;
+  let backgroundUrl;
+  if (weatherId >= 200 && weatherId <= 299) {
+    backgroundUrl = 'url("images/thunderstorm.jpg")';
+  } else if (weatherId >= 300 && weatherId <= 399) {
+    backgroundUrl = 'url("images/drizzle.jpg")';
+  } else if (weatherId >= 500 && weatherId <= 599) {
+    backgroundUrl = 'url("images/rain.jpg")';
+  } else if (weatherId >= 600 && weatherId <= 699) {
+    backgroundUrl = 'url("images/snow.jpg")';
+  } else if (weatherId >= 700 && weatherId <= 799) {
+    backgroundUrl = '';
+  } else if (weatherId === 800) {
+    backgroundUrl = 'url("images/clear.jpg")';
+  } else if (weatherId >= 800 && weatherId <= 899) {
+    backgroundUrl = 'url("images/clouds.jpg")';
+  }
+  document.body.style.backgroundImage = backgroundUrl;
+}
+
+function clearWeatherData() {
+  const weatherDetails = document.getElementsByClassName(
+    'weather-details-item'
+  );
+  [...weatherDetails].forEach((elem) => {
+    elem.replaceChildren();
+  });
+
+  const heading = document.getElementById('weather-heading');
+  const temp = document.getElementById('temperature');
+  const desc = document.getElementById('weather-desc');
+
+  heading.innerText = '';
+  temp.innerText = '';
+  desc.innerText = '';
 }
 
 async function processForm(event) {
   event.preventDefault();
 
-  const city = document.forms['location-form'].city.value;
-  const country = document.forms['location-form'].country.value;
-  const state = document.forms['location-form'].state.value;
-  const units = document.forms['location-form'].units.value;
+  clearWeatherData();
+
+  const city = document.forms['weather-form'].city.value;
+  const country = document.forms['weather-form'].country.value;
+  const state = document.forms['weather-form'].state.value;
+  const units = document.forms['weather-form'].units.value;
 
   const locationData = await getLocation(city, country, state);
   const weatherData = await getWeather(locationData, units);
@@ -236,5 +288,5 @@ async function processForm(event) {
 loadCountries();
 renderStateSelection();
 loadStates();
-const form = document.getElementById('location-form');
+const form = document.getElementById('weather-form');
 form.addEventListener('submit', processForm);
