@@ -274,6 +274,14 @@ label {
   text-align: center;
 }
 
+.error-msg {
+  font-size: 2.5rem;
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .hidden {
   display:none;
 }

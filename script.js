@@ -1,6 +1,33 @@
+function hideWeatherInfo() {
+  const weatherInfo = document.getElementById('weather-info');
+  weatherInfo.classList.add('hidden');
+}
+
+function showWeatherInfo() {
+  const weatherInfo = document.getElementById('weather-info');
+  weatherInfo.classList.remove('hidden');
+}
+
+function hideErrorMsg() {
+  const errorMsg = document.getElementById('error-msg');
+  errorMsg.classList.add('hidden');
+}
+
+function showErrorMsg() {
+  const errorMsg = document.getElementById('error-msg');
+  errorMsg.classList.remove('hidden');
+}
+
+function alertError(error) {
+  hideWeatherInfo();
+  showErrorMsg();
+  const errorMsg = document.getElementById('error-msg');
+  errorMsg.innerText = `${error.message}`;
+  console.error(error);
+}
+
 async function loadJson(url) {
   const response = await fetch(url, { mode: 'cors' });
-  console.log(url);
   if (response.status === 200) {
     return response.json();
   }
@@ -14,10 +41,17 @@ async function getLocation(city, country, state = '') {
     state.length === 0
       ? `${encodedCity},${encodedCountry}`
       : `${encodedCity},${state},${encodedCountry}`;
-  const response = await loadJson(
-    `https://api.openweathermap.org/geo/1.0/direct?q=${searchQuery}&limit=5&appid=58f2669ab93d58441800526b124f17d2`
-  );
-  console.log(response);
+  let response;
+  try {
+    response = await loadJson(
+      `https://api.openweathermap.org/geo/1.0/direct?q=${searchQuery}&limit=1&appid=58f2669ab93d58441800526b124f17d2`
+    );
+  } catch (error) {
+    throw new Error(error.message);
+  }
+  if (response.length === 0) {
+    throw new Error('Invalid Location');
+  }
   const locationData = response[0];
   const stateStr = Object.hasOwn(locationData, 'state')
     ? locationData.state
@@ -32,21 +66,25 @@ async function getLocation(city, country, state = '') {
 }
 
 async function getCountryNameFromCountryCode(countryCode) {
-  const countryData = await loadJson(
-    `https://restcountries.com/v3.1/alpha?codes=${countryCode}`
-  );
+  let countryData;
+  try {
+    countryData = await loadJson(
+      `https://restcountries.com/v3.1/alpha?codes=${countryCode}`
+    );
+  } catch (error) {
+    throw new Error(error.message);
+  }
   return countryData[0].name.common;
 }
 
 async function getWeather(location, units = 'metric') {
-  let weatherObj = {};
+  const lat = location.lat.toString();
+  const lon = location.lon.toString();
+  let weatherObj;
   try {
-    const lat = location.lat.toString();
-    const lon = location.lon.toString();
     const weatherData = await loadJson(
       `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&APPID=58f2669ab93d58441800526b124f17d2&units=${units}`
     );
-    console.log(weatherData);
     weatherObj = {
       city: location.city,
       state: location.state,
@@ -57,29 +95,35 @@ async function getWeather(location, units = 'metric') {
       units: units,
     };
   } catch (error) {
-    console.log(error);
+    throw new Error(error.message);
   }
   return weatherObj;
 }
 
 async function getCountries() {
-  const countriesObj = {};
+  let countriesData;
   try {
-    const countriesData = await loadJson('https://restcountries.com/v3.1/all');
-    countriesData.forEach((country) => {
-      const name = country.name.common;
-      const code = country.cca2;
-      countriesObj[name] = code;
-    });
+    countriesData = await loadJson('https://restcountries.com/v3.1/all');
   } catch (error) {
-    console.log(error);
+    throw new Error(error.message);
   }
+  const countriesObj = {};
+  countriesData.forEach((country) => {
+    const name = country.name.common;
+    const code = country.cca2;
+    countriesObj[name] = code;
+  });
   return countriesObj;
 }
 
 async function loadCountries() {
   const countrySelect = document.getElementById('country-select');
-  const countriesObj = await getCountries();
+  let countriesObj;
+  try {
+    countriesObj = await getCountries();
+  } catch (error) {
+    throw new Error(error.message);
+  }
   Object.entries(countriesObj)
     .sort()
     .forEach((country) => {
@@ -192,8 +236,11 @@ function createWeatherDetail(id, name, value) {
 }
 
 function displayWeatherData(weatherData) {
-  const weatherInfo = document.getElementById('weather-info');
-  weatherInfo.classList.remove('hidden');
+  showWeatherInfo();
+  hideErrorMsg();
+
+  const weatherInfoBottom = document.getElementById('weather-info-bottom');
+  weatherInfoBottom.classList.remove('hidden');
 
   const heading = document.getElementById('weather-heading');
   const temp = document.getElementById('temperature');
@@ -251,7 +298,11 @@ function displayWeatherData(weatherData) {
   document.body.style.backgroundImage = backgroundUrl;
 }
 
-function clearWeatherData() {
+async function processForm(event) {
+  event.preventDefault();
+
+  hideWeatherInfo();
+
   const weatherDetails = document.getElementsByClassName(
     'weather-details-item'
   );
@@ -259,34 +310,32 @@ function clearWeatherData() {
     elem.replaceChildren();
   });
 
-  const heading = document.getElementById('weather-heading');
-  const temp = document.getElementById('temperature');
-  const desc = document.getElementById('weather-desc');
-
-  heading.innerText = '';
-  temp.innerText = '';
-  desc.innerText = '';
-}
-
-async function processForm(event) {
-  event.preventDefault();
-
-  clearWeatherData();
-
   const city = document.forms['weather-form'].city.value;
   const country = document.forms['weather-form'].country.value;
   const state = document.forms['weather-form'].state.value;
   const units = document.forms['weather-form'].units.value;
 
-  const locationData = await getLocation(city, country, state);
-  const weatherData = await getWeather(locationData, units);
-
-  console.log(weatherData);
-  displayWeatherData(weatherData);
+  let locationData;
+  let weatherData;
+  try {
+    locationData = await getLocation(city, country, state);
+    weatherData = await getWeather(locationData, units);
+    displayWeatherData(weatherData);
+  } catch (error) {
+    alertError(error);
+  }
 }
 
-loadCountries();
-renderStateSelection();
-loadStates();
-const form = document.getElementById('weather-form');
-form.addEventListener('submit', processForm);
+(async function renderPage() {
+  try {
+    await loadCountries();
+  } catch (error) {
+    alertError(error.message);
+  }
+  const container = document.getElementById('container');
+  container.classList.remove('hidden');
+  renderStateSelection();
+  loadStates();
+  const form = document.getElementById('weather-form');
+  form.addEventListener('submit', processForm);
+})();

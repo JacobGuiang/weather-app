@@ -8,7 +8,7 @@
   <title>Weather App</title>
 </head>
 <body>
-  <div class="container">
+  <div class="container hidden" id="container">
     <div class="display-container">
       <div class="title">
         Weather
@@ -60,7 +60,7 @@
             <div class="weather-main" id="weather-desc"></div>
           </div>
         </div>
-        <div class="weather-info-bottom">
+        <div class="weather-info-bottom" id="weather-info-bottom">
           <div class="weather-details">
             <div class="weather-details-item" id="temp-feels-like"></div>
             <div class="weather-details-item" id="temp-high"></div>
@@ -74,6 +74,8 @@
           </div>
         </div>
       </div>
+
+      <div class="error-msg hidden" id="error-msg"></div>
     </div>
   </div>
   <script src="script.js"></script>
