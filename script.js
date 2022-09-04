@@ -1,26 +1,16 @@
-function hideWeatherInfo() {
-  const weatherInfo = document.getElementById('weather-info');
-  weatherInfo.classList.add('hidden');
+function hideElem(id) {
+  const elem = document.getElementById(id);
+  elem.classList.add('hidden');
 }
 
-function showWeatherInfo() {
-  const weatherInfo = document.getElementById('weather-info');
-  weatherInfo.classList.remove('hidden');
-}
-
-function hideErrorMsg() {
-  const errorMsg = document.getElementById('error-msg');
-  errorMsg.classList.add('hidden');
-}
-
-function showErrorMsg() {
-  const errorMsg = document.getElementById('error-msg');
-  errorMsg.classList.remove('hidden');
+function showElem(id) {
+  const elem = document.getElementById(id);
+  elem.classList.remove('hidden');
 }
 
 function alertError(error) {
-  hideWeatherInfo();
-  showErrorMsg();
+  hideElem('weather-info');
+  showElem('error-msg');
   const errorMsg = document.getElementById('error-msg');
   errorMsg.innerText = `${error.message}`;
   console.error(error);
@@ -236,8 +226,8 @@ function createWeatherDetail(id, name, value) {
 }
 
 function displayWeatherData(weatherData) {
-  showWeatherInfo();
-  hideErrorMsg();
+  showElem('weather-info');
+  hideElem('error-msg');
 
   const weatherInfoBottom = document.getElementById('weather-info-bottom');
   weatherInfoBottom.classList.remove('hidden');
@@ -301,7 +291,9 @@ function displayWeatherData(weatherData) {
 async function processForm(event) {
   event.preventDefault();
 
-  hideWeatherInfo();
+  hideElem('weather-info');
+  hideElem('error-msg');
+  showElem('loader');
 
   const weatherDetails = document.getElementsByClassName(
     'weather-details-item'
@@ -320,8 +312,10 @@ async function processForm(event) {
   try {
     locationData = await getLocation(city, country, state);
     weatherData = await getWeather(locationData, units);
+    hideElem('loader');
     displayWeatherData(weatherData);
   } catch (error) {
+    hideElem('loader');
     alertError(error);
   }
 }
@@ -330,8 +324,9 @@ async function processForm(event) {
   try {
     await loadCountries();
   } catch (error) {
-    alertError(error.message);
+    console.error(error);
   }
+  hideElem('loader');
   const container = document.getElementById('container');
   container.classList.remove('hidden');
   renderStateSelection();
