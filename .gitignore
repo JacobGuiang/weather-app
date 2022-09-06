@@ -2,3 +2,4 @@ node_modules
 package*
 .eslintrc.json
 .prettierrc.json
+.stylelintrc.json

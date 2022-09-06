@@ -16,43 +16,25 @@ function alertError(error) {
   console.error(error);
 }
 
+function createWeatherDetail(id, name, value) {
+  const detailDiv = document.getElementById(id);
+
+  const nameDiv = document.createElement('div');
+  nameDiv.innerText = name;
+
+  const valueDiv = document.createElement('div');
+  valueDiv.innerText = value;
+
+  detailDiv.appendChild(nameDiv);
+  detailDiv.appendChild(valueDiv);
+}
+
 async function loadJson(url) {
   const response = await fetch(url, { mode: 'cors' });
   if (response.status === 200) {
     return response.json();
   }
   throw new Error(`${response.status} for ${response.url}`);
-}
-
-async function getLocation(city, country, state = '') {
-  const encodedCity = encodeURIComponent(city.trim());
-  const encodedCountry = encodeURIComponent(country.trim());
-  const searchQuery =
-    state.length === 0
-      ? `${encodedCity},${encodedCountry}`
-      : `${encodedCity},${state},${encodedCountry}`;
-  let response;
-  try {
-    response = await loadJson(
-      `https://api.openweathermap.org/geo/1.0/direct?q=${searchQuery}&limit=1&appid=58f2669ab93d58441800526b124f17d2`
-    );
-  } catch (error) {
-    throw new Error(error.message);
-  }
-  if (response.length === 0) {
-    throw new Error('Invalid Location');
-  }
-  const locationData = response[0];
-  const stateStr = Object.hasOwn(locationData, 'state')
-    ? locationData.state
-    : '';
-  return {
-    lat: locationData.lat,
-    lon: locationData.lon,
-    city: locationData.name,
-    state: stateStr,
-    countryCode: locationData.country,
-  };
 }
 
 async function getCountryNameFromCountryCode(countryCode) {
@@ -65,29 +47,6 @@ async function getCountryNameFromCountryCode(countryCode) {
     throw new Error(error.message);
   }
   return countryData[0].name.common;
-}
-
-async function getWeather(location, units = 'metric') {
-  const lat = location.lat.toString();
-  const lon = location.lon.toString();
-  let weatherObj;
-  try {
-    const weatherData = await loadJson(
-      `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&APPID=58f2669ab93d58441800526b124f17d2&units=${units}`
-    );
-    weatherObj = {
-      city: location.city,
-      state: location.state,
-      country: await getCountryNameFromCountryCode(location.countryCode),
-      main: weatherData.main,
-      weather: weatherData.weather[0],
-      wind: weatherData.wind,
-      units: units,
-    };
-  } catch (error) {
-    throw new Error(error.message);
-  }
-  return weatherObj;
 }
 
 async function getCountries() {
@@ -212,17 +171,58 @@ function loadStates() {
   });
 }
 
-function createWeatherDetail(id, name, value) {
-  const detailDiv = document.getElementById(id);
+async function getLocation(city, country, state = '') {
+  const encodedCity = encodeURIComponent(city.trim());
+  const encodedCountry = encodeURIComponent(country.trim());
+  const searchQuery =
+    state.length === 0
+      ? `${encodedCity},${encodedCountry}`
+      : `${encodedCity},${state},${encodedCountry}`;
+  let response;
+  try {
+    response = await loadJson(
+      `https://api.openweathermap.org/geo/1.0/direct?q=${searchQuery}&limit=1&appid=58f2669ab93d58441800526b124f17d2`
+    );
+  } catch (error) {
+    throw new Error(error.message);
+  }
+  if (response.length === 0) {
+    throw new Error('Invalid Location');
+  }
+  const locationData = response[0];
+  const stateStr = Object.hasOwn(locationData, 'state')
+    ? locationData.state
+    : '';
+  return {
+    lat: locationData.lat,
+    lon: locationData.lon,
+    city: locationData.name,
+    state: stateStr,
+    countryCode: locationData.country,
+  };
+}
 
-  const nameDiv = document.createElement('div');
-  nameDiv.innerText = name;
-
-  const valueDiv = document.createElement('div');
-  valueDiv.innerText = value;
-
-  detailDiv.appendChild(nameDiv);
-  detailDiv.appendChild(valueDiv);
+async function getWeather(location, units = 'metric') {
+  const lat = location.lat.toString();
+  const lon = location.lon.toString();
+  let weatherObj;
+  try {
+    const weatherData = await loadJson(
+      `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&APPID=58f2669ab93d58441800526b124f17d2&units=${units}`
+    );
+    weatherObj = {
+      city: location.city,
+      state: location.state,
+      country: await getCountryNameFromCountryCode(location.countryCode),
+      main: weatherData.main,
+      weather: weatherData.weather[0],
+      wind: weatherData.wind,
+      units: units,
+    };
+  } catch (error) {
+    throw new Error(error.message);
+  }
+  return weatherObj;
 }
 
 function displayWeatherData(weatherData) {
@@ -236,10 +236,12 @@ function displayWeatherData(weatherData) {
   const temp = document.getElementById('temperature');
   const desc = document.getElementById('weather-desc');
 
-  const locationStr =
-    weatherData.state.length === 0
-      ? `${weatherData.city}, ${weatherData.country}`
-      : `${weatherData.city}, ${weatherData.state}, ${weatherData.country}`;
+  let locationStr;
+  if (weatherData.state.length === 0) {
+    locationStr = `${weatherData.city}, ${weatherData.country}`;
+  } else {
+    locationStr = `${weatherData.city}, ${weatherData.state}, ${weatherData.country}`;
+  }
   heading.innerText = `Weather in ${locationStr}`;
 
   temp.innerText = `${weatherData.main.temp}\xB0`;
@@ -329,8 +331,10 @@ async function processForm(event) {
   hideElem('loader');
   const container = document.getElementById('container');
   container.classList.remove('hidden');
+
   renderStateSelection();
   loadStates();
+
   const form = document.getElementById('weather-form');
   form.addEventListener('submit', processForm);
 })();

@@ -60,6 +60,16 @@ body {
   background-repeat: no-repeat;
 }
 
+body,
+input,
+select {
+  background-color: #525252;
+}
+
+label {
+  cursor: pointer;
+}
+
 select {
   cursor: pointer;
   -webkit-appearance: none;
@@ -75,30 +85,6 @@ input, select {
   border-radius: 15px;
   padding: 4px;
   text-align: center;
-}
-
-body, input, select {
-  background-color: #525252;
-}
-
-input:focus::placeholder {
-  color: transparent;
-}
-
-input:focus::-webkit-input-placeholder {
-  color: transparent;
-}
-
-input:focus:-moz-placeholder {
-  color: transparent;
-}
-
-input:focus::-moz-placeholder {
-  color: transparent;
-}
-
-input:focus:-ms-input-placeholder {
-  color: transparent;
 }
 
 input:-webkit-autofill,
@@ -117,6 +103,14 @@ select:-webkit-autofill {
   -webkit-text-fill-color: white !important;
 }
 
+input:focus::placeholder,
+input:focus::-webkit-input-placeholder,
+input:focus:-moz-placeholder,
+input:focus::-moz-placeholder,
+input:focus:-ms-input-placeholder {
+  color: transparent;
+}
+
 ::placeholder {
   text-align: inherit;
   color: inherit;
@@ -124,12 +118,7 @@ select:-webkit-autofill {
   opacity: 1;
 }
 
-:-ms-input-placeholder {
-  text-align: inherit;
-  color: inherit;
-  font-size: inherit;
-}
-
+:-ms-input-placeholder,
 ::-ms-input-placeholder {
   text-align: inherit;
   color: inherit;
@@ -146,12 +135,18 @@ select:-webkit-autofill {
 .display-container {
   display: flex;
   flex-direction: column;
-  background: rgba(0, 0, 0, 0.9);
+  background: rgb(0 0 0 / 90%);
   color: white;
   width: 60%;
   height: 60%;
   border-radius: 20px;
   padding: 0 40px 40px;
+}
+
+.title {
+  text-align: center;
+  font-size: 3rem;
+  padding: 30px;
 }
 
 .form-container {
@@ -192,10 +187,8 @@ select:-webkit-autofill {
   width: auto;
 }
 
-.form-bottom {
-  display: flex;
-  justify-content: center;
-  gap: 20px;
+.form-submit {
+  text-align: center;
 }
 
 .imperial-container,
@@ -203,26 +196,16 @@ select:-webkit-autofill {
   display: flex;
 }
 
-.unit-input { 
+.units-input { 
   width: 20px;
   height: 20px;
   accent-color: #525252;
   cursor: pointer;
 }
 
-label {
-  cursor: pointer;
-}
-
 .submit-btn {
   padding: 4px 40px;
   cursor: pointer;
-}
-
-.title {
-  text-align: center;
-  font-size: 3rem;
-  padding: 30px;
 }
 
 .weather-heading {
@@ -249,6 +232,10 @@ label {
   justify-content: space-evenly;
 }
 
+.weather-main {
+  font-size: 2rem;
+}
+
 .weather-info-bottom {
   display: flex;
   flex: 1;
@@ -269,14 +256,6 @@ label {
   justify-content: space-between;
   border-top: 1px solid #525252;
   padding-top: 10px;
-}
-
-.weather-main {
-  font-size: 2rem;
-}
-
-.form-submit {
-  text-align: center;
 }
 
 .error-msg {
@@ -311,7 +290,6 @@ label {
   bottom: 0;
 }
 
-/* Safari */
 @-webkit-keyframes spin {
   0% { -webkit-transform: rotate(0deg); }
   100% { -webkit-transform: rotate(360deg); }

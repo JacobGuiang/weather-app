@@ -5,7 +5,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="style.css">
-  <title>Weather App</title>
+  <title>Weather</title>
 </head>
 <body>
   <div id="loader"></div>
@@ -36,12 +36,12 @@
 
             <div class="units-container">
               <div class="imperial-container">
-                <input type="radio" class="unit-input" id="imperial-select" name="units" value="imperial" checked="checked">
+                <input type="radio" class="units-input" id="imperial-select" name="units" value="imperial" checked="checked">
                 <label for="imperial-select">&deg;F</label>
               </div>
               
               <div class="metric-container">
-                <input type="radio" class="unit-input" id="metric-select" name="units" value="metric">
+                <input type="radio" class="units-input" id="metric-select" name="units" value="metric">
                 <label for="metric-select">&deg;C</label>
               </div>
             </div>
@@ -61,6 +61,7 @@
             <div class="weather-main" id="weather-desc"></div>
           </div>
         </div>
+        
         <div class="weather-info-bottom" id="weather-info-bottom">
           <div class="weather-details">
             <div class="weather-details-item" id="temp-feels-like"></div>
